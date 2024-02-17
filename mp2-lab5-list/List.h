@@ -49,8 +49,9 @@ public:
 	}
 
 	bool empty() { return pFirst == pStop;  }
+	bool isEnd() { return pStop == pCurr; }; // проверить, дошёл ли текущий элемент списка до конца
 
-	T insFirst(T _val) // вставить элемент списка в начало
+	virtual T insFirst(T _val) // вставить элемент списка в начало
 	{
 		TNode<T>* tmp = new TNode<T>;
 		tmp->val = _val;
@@ -74,51 +75,53 @@ public:
 		pPr = tmp;
 		pos++; len++;
 	}
-	void delFirst() // удалить первый элемент списка НЕ ДОДЕЛАЛ
+	void delFirst() // удалить первый элемент списка
 	{
 		TNode<T>* tmp = pFirst;
 		pFirst->pNext = pFirst;
 		delete tmp;
 		len--; pos--;
 	}
-	void delLast() // удалить последний элемент списка
-	{
-		TNode<T>* tmp = pLast;
-		
-		delete tmp;
-		len--;
-	}
 	void delCurr() // удалить текущий элемент списка
 	{
-		TNode<T>* tmp = pCurr;
-		pCurr = pCurr->pNext;
-		pPr->pNext = pCurr;
-		delete tmp;
-		len--; pos++;
+		if (pCurr != pStop) {
+			if (pCurr == pFirst) {
+				delFirst();
+				return;
+			}
+			if (pCurr == pLast) {
+
+				return;
+			}
+			TNode<T>* tmp = pCurr;
+			pCurr = pCurr->pNext;
+			pPr->pNext = pCurr;
+			delete tmp;
+			len--; pos++;
+		}
 	}
 	void clrList() // ?
 	{
 		TNode<T>* tmp = pFirst;
-		while (pFirst != pStop) {
+		while (!isEnd()) {
 			pFirst = pFirst->pNext;
 			delete tmp;
 			tmp = pFirst;
 		}
 	}
 	TNode<T> getCurr() { return *pCurr; } // получить доступ к текущему элементу списка
-	void reset(); // установить первый элемент списка как текущий
+	void reset() // установить первый элемент списка как текущий
 	{
 		pCurr = pFirst;
 		pPr = pStop;
 		pos = 0;
 	}
-	void goNext(); // перейти к следующему элементу списка
+	void goNext() // перейти к следующему элементу списка
 	{
 		pPr = pCurr;
 		pCurr = pCurr->pNext;
 		pos++;
 	}
-	bool isEnd() { return pStop == pCurr; }; // проверить, дошёл ли текущий элемент списка до конца
 	void setpos(int _pos) {
 		pos = _pos;
 		pCurr = pFirst;
@@ -127,4 +130,30 @@ public:
 			pCurr = pCurr->pNext;
 		}
 	};
+};
+
+struct TMonom {
+	double coef;
+	int index;
+};
+
+template <class T>
+class THeadList : public TList<T> {
+protected:
+	TNode<T>* pHead;
+public:
+	THeadList() {
+		pHead = new TNode<T>;
+		pHead->pNext = pHead;
+		pStop = pFirst = pLast = pPr = pCurr = pHead;
+		post = -1; len = 0;
+	}
+	~THeadList() {
+		TList::delList();
+		delete pHead;
+	}
+	void insFirst(T _val) override {
+		TList::insFirst(_val);
+		pHead->pNext = pFirst;
+	}
 };
