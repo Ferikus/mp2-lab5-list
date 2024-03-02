@@ -10,14 +10,12 @@ template <class T>
 class TList {
 protected:
 	TNode<T>* pFirst, * pLast, * pCurr, * pPr;
-	const TNode<T>* pStop;
+	const TNode<T>* pStop = nullptr;
 	int pos, len;
 public:
 	TList() {
-		pStop = nullptr;
 		pFirst = pLast = pCurr = pPr = pStop;
-		pos = -1;
-		len = 0;
+		pos = -1; len = 0;
 	}
 	TList(const TList& list) {
 		TNode<T>* tmp = list.pFirst, * i;
@@ -44,6 +42,7 @@ public:
 			delete tmp;
 		}
 	}
+
 	TList& operator=(const TList& list) {
 		if (&list == this) return *this;
 		clrList();
@@ -77,14 +76,14 @@ public:
 		pFirst = tmp;
 		pos++; len++;
 	}
-	T insLast(T _val) // вставить элемент списка в конец
+	virtual T insLast(T _val) // вставить элемент списка в конец
 	{
 		TNode<T>* tmp = new TNode<T>;
 		tmp->val = _val;
 		pLast->pNext = tmp;
 		pos++; len++;
 	}
-	T insCurr(T _val) // вставить элемент списка перед текущим
+	virtual T insCurr(T _val) // вставить элемент списка перед текущим
 	{
 		TNode<T>* tmp = new TNode<T>;
 		tmp->val = _val;
@@ -93,14 +92,14 @@ public:
 		pPr = tmp;
 		pos++; len++;
 	}
-	void delFirst() // удалить первый элемент списка
+	virtual void delFirst() // удалить первый элемент списка
 	{
 		TNode<T>* tmp = pFirst;
 		pFirst->pNext = pFirst;
 		delete tmp;
 		len--; pos--;
 	}
-	void delCurr() // удалить текущий элемент списка
+	virtual void delCurr() // удалить текущий элемент списка
 	{
 		if (pCurr != pStop) {
 			if (pCurr == pFirst) {
@@ -108,7 +107,10 @@ public:
 				return;
 			}
 			if (pCurr == pLast) {
-
+				TNode<T>* tmp = pCurr;
+				delete tmp;
+				pCurr = pStop;
+				pos = -1; len--;
 				return;
 			}
 			TNode<T>* tmp = pCurr;
@@ -116,9 +118,10 @@ public:
 			pPr->pNext = pCurr;
 			delete tmp;
 			len--; pos++;
+			return;
 		}
 	}
-	void clrList() // ?
+	void clrList() // очистить список
 	{
 		TNode<T>* tmp = pFirst;
 		while (!isEnd()) {
@@ -150,28 +153,44 @@ public:
 	};
 };
 
-//struct TMonom {
-//	double coef;
-//	int index;
-//};
-//
+template <class T>
+class THeadList : public TList<T> {
+protected:
+	TNode<T>* pHead;
+public:
+	THeadList() {
+		pHead = new TNode<T>;
+		pHead->pNext = pHead;
+		pFirst = pLast = pPr = pCurr = pHead = pStop;
+		pos = -1; len = 0;
+	}
+	~THeadList() {
+		TList::delList();
+		delete pHead;
+	}
+	void insFirst(T _val) override {
+		TList::insFirst(_val);
+		pHead->pNext = pFirst;
+	}
+	void insLast(T _val) override {
+		TList::insLast(_val);
+	}
+	void insCurr(T _val) override {
+		TList::insCurr(_val);
+	}
+	void delFirst(T _val) override {
+		TList::delFirst(_val);
+	}
+	void delCurr(T _val) override {
+		TList::delCurr(_val);
+	}
+};
+
+struct TMonom {
+	double coef;
+	int index;
+};
+
 //template <class T>
-//class THeadList : public TList<T> {
-//protected:
-//	TNode<T>* pHead;
-//public:
-//	THeadList() {
-//		pHead = new TNode<T>;
-//		pHead->pNext = pHead;
-//		pStop = pFirst = pLast = pPr = pCurr = pHead;
-//		post = -1; len = 0;
-//	}
-//	~THeadList() {
-//		TList::delList();
-//		delete pHead;
-//	}
-//	void insFirst(T _val) override {
-//		TList::insFirst(_val);
-//		pHead->pNext = pFirst;
-//	}
+//class Polynom : public THeadList<T> {
 //};
