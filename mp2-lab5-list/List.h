@@ -3,21 +3,28 @@
 template <class T>
 struct TNode {
 	T val;
-	TNode* pNext;
+	TNode* pNext = nullptr;
+
+	//bool operator==(const TNode& node) {
+	//	if (val == node.val) && (pNext == node.pNext)
+	//		return true;
+	//	else return false;
+	//}
 };
 
 template <class T>
 class TList {
 protected:
-	TNode<T>* pFirst, * pLast, * pCurr, * pPr;
-	const TNode<T>* pStop = nullptr;
+	TNode<T>* pFirst, * pLast, * pCurr, * pPr, * pStop;
 	int pos, len;
 public:
-	TList() {
-		pFirst = pLast = pCurr = pPr = pStop;
+	TList()
+	{
+		pFirst = pLast = pCurr = pPr = pStop = nullptr;
 		pos = -1; len = 0;
 	}
-	TList(const TList& list) {
+	TList(const TList<T>& list)
+	{
 		TNode<T>* tmp = list.pFirst, * i;
 		pFirst = pLast = nullptr;
 		while (tmp != pStop) {
@@ -30,20 +37,28 @@ public:
 				pLast->pNext = i;
 				pLast = i;
 			}
+			tmp = tmp->pNext;
 		}
-		tmp = tmp->pNext;
 		pos = list.pos;
 		len = list.len;
 	}
-	~TList() {
-		while (!empty()) {
-			TNode<T>* tmp = pFirst;
+
+	virtual void clrList() // очистить список
+	{
+		TNode<T>* tmp;
+		while (pFirst != pStop) {
+			tmp = pFirst;
 			pFirst = pFirst->pNext;
 			delete tmp;
 		}
+		len = 0; pos = -1;
+	}
+	~TList() {
+		clrList();
 	}
 
-	TList& operator=(const TList& list) {
+	TList& operator=(const TList& list)
+	{
 		if (&list == this) return *this;
 		clrList();
 		TNode<T>* tmp = list.pFirst, * i;
@@ -65,132 +80,121 @@ public:
 		return *this;
 	}
 
-	bool empty() { return pFirst == pStop; } // проверить список на пустоту
-	bool isEnd() { return pStop == pCurr; }; // проверить, дошёл ли текущий элемент списка до конца
+	bool operator==(const TList& list)
+	{
+		for (reset(); isEnd(); goNext()) {
+			if (pCurr->val != list.pCurr->val) {
+				return false;
+			}
+		}
+		return true;
+	}
 
-	virtual T insFirst(T _val) // вставить элемент списка в начало
-	{
-		TNode<T>* tmp = new TNode<T>;
-		tmp->val = _val;
-		tmp->pNext = pFirst;
-		pFirst = tmp;
-		pos++; len++;
+	bool operator!=(const TList& list) {
+		return !(*this == list);
 	}
-	virtual T insLast(T _val) // вставить элемент списка в конец
-	{
-		TNode<T>* tmp = new TNode<T>;
-		tmp->val = _val;
-		pLast->pNext = tmp;
-		pos++; len++;
-	}
-	virtual T insCurr(T _val) // вставить элемент списка перед текущим
-	{
-		TNode<T>* tmp = new TNode<T>;
-		tmp->val = _val;
-		pPr->pNext = tmp;
-		tmp->pNext = pCurr;
-		pPr = tmp;
-		pos++; len++;
-	}
-	virtual void delFirst() // удалить первый элемент списка
-	{
-		TNode<T>* tmp = pFirst;
-		pFirst->pNext = pFirst;
-		delete tmp;
-		len--; pos--;
-	}
-	virtual void delCurr() // удалить текущий элемент списка
-	{
-		if (pCurr != pStop) {
-			if (pCurr == pFirst) {
-				delFirst();
-				return;
-			}
-			if (pCurr == pLast) {
-				TNode<T>* tmp = pCurr;
-				delete tmp;
-				pCurr = pStop;
-				pos = -1; len--;
-				return;
-			}
-			TNode<T>* tmp = pCurr;
-			pCurr = pCurr->pNext;
-			pPr->pNext = pCurr;
-			delete tmp;
-			len--; pos++;
-			return;
-		}
-	}
-	void clrList() // очистить список
-	{
-		TNode<T>* tmp = pFirst;
-		while (!isEnd()) {
-			pFirst = pFirst->pNext;
-			delete tmp;
-			tmp = pFirst;
-		}
-	}
-	TNode<T> getCurr() { return *pCurr; } // получить доступ к текущему элементу списка
-	void reset() // установить первый элемент списка как текущий
+
+	virtual inline bool empty() { return pFirst == pStop; } // проверить список на пустоту
+	virtual inline void reset() // установить первый элемент списка как текущий
 	{
 		pCurr = pFirst;
 		pPr = pStop;
 		pos = 0;
 	}
-	void goNext() // перейти к следующему элементу списка
+	virtual inline void goNext() // перейти к следующему элементу списка
 	{
+		if (pos <= -1 || pos >= len) throw "Current index is out of list";
 		pPr = pCurr;
 		pCurr = pCurr->pNext;
 		pos++;
 	}
-	void setpos(int _pos) {
-		pos = _pos;
-		pCurr = pFirst;
-		for (int i = 0; i < pos; i++) {
-			pPr = pCurr;
-			pCurr = pCurr->pNext;
+	virtual inline bool isEnd() { return pStop == pCurr; } // проверить, дошёл ли текущий элемент списка до конца
+	virtual inline void setpos(int _pos)
+	{
+		if (_pos <= -1 || _pos >= len) throw "Current index is out of list";
+		reset();
+		while (pos < _pos) {
+			goNext();
 		}
-	};
-};
+	}
 
-template <class T>
-class THeadList : public TList<T> {
-protected:
-	TNode<T>* pHead;
-public:
-	THeadList() {
-		pHead = new TNode<T>;
-		pHead->pNext = pHead;
-		pFirst = pLast = pPr = pCurr = pHead = pStop;
-		pos = -1; len = 0;
+	virtual void insFirst(T _val) // вставить элемент списка в начало
+	{
+		TNode<T>* tmp = new TNode<T>;
+		tmp->val = _val;
+		tmp->pNext = pFirst;
+		if (empty()) {
+			pFirst = pLast = tmp;
+			reset();
+		}
+		else {
+			pFirst = tmp;
+			pos++;
+		}
+		len++;
 	}
-	~THeadList() {
-		TList::delList();
-		delete pHead;
+	virtual void insLast(T _val) // вставить элемент списка в конец
+	{
+		if (empty()) insFirst(_val);
+		else {
+			TNode<T>* tmp = new TNode<T>;
+			tmp->val = _val;
+			pLast->pNext = tmp;
+			pLast = tmp;
+			len++;
+		}
 	}
-	void insFirst(T _val) override {
-		TList::insFirst(_val);
-		pHead->pNext = pFirst;
+	virtual void insCurr(T _val) // вставить элемент списка перед текущим
+	{
+		if (empty()) throw "The list is empty: there is no current node";
+		else if (pCurr == pFirst) insFirst(_val);
+		else {
+			TNode<T>* tmp = new TNode<T>;
+			tmp->val = _val;
+			pPr->pNext = tmp;
+			tmp->pNext = pCurr;
+			pPr = tmp;
+			pos++; len++;
+		}
 	}
-	void insLast(T _val) override {
-		TList::insLast(_val);
+	virtual void delFirst() // удалить первый элемент списка
+	{
+		if (empty()) throw "The list is empty";
+		TNode<T>* tmp = pFirst;
+		pFirst = pFirst->pNext;
+		delete tmp;
+		len--; pos--;
 	}
-	void insCurr(T _val) override {
-		TList::insCurr(_val);
+	virtual void delCurr() // удалить текущий элемент списка
+	{
+		if (empty()) throw "The list is empty";
+		if (pCurr == pStop) throw "The current position is our of the list";
+		if (pCurr == pFirst) {
+			delFirst();
+		}
+		else if (pCurr == pLast) {
+			TNode<T>* tmp = pCurr;
+			delete tmp;
+			pCurr = pPr = pStop;
+			pos = -1; len--;
+		}
+		else {
+			TNode<T>* tmp = pCurr;
+			pCurr = pCurr->pNext;
+			pPr->pNext = pCurr;
+			delete tmp;
+			len--;
+		}
 	}
-	void delFirst(T _val) override {
-		TList::delFirst(_val);
+
+	virtual inline T getCurr() // получить доступ к текущему элементу списка
+	{
+		if (pos <= -1 || pos >= len) throw "Current index is out of list";
+		return pCurr->val;
 	}
-	void delCurr(T _val) override {
-		TList::delCurr(_val);
+	virtual inline T getPr() // получить доступ к текущему элементу списка
+	{
+		if (pos <= -1 || pos >= len) throw "Current index is out of list";
+		return pPr->val;
 	}
 };
-
-struct TMonom {
-	double coef;
-	int index;
-};
-
-//template <class T>
-//class Polynom : public THeadList<T> {
-//};

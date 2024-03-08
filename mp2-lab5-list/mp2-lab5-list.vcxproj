@@ -139,7 +139,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="HeadList.h" />
     <ClInclude Include="List.h" />
+    <ClInclude Include="Polynomial.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
