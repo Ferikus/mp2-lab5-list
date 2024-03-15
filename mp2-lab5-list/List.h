@@ -4,12 +4,6 @@ template <class T>
 struct TNode {
 	T val;
 	TNode* pNext = nullptr;
-
-	//bool operator==(const TNode& node) {
-	//	if (val == node.val) && (pNext == node.pNext)
-	//		return true;
-	//	else return false;
-	//}
 };
 
 template <class T>
@@ -34,7 +28,7 @@ public:
 				pFirst = pLast = i;
 			}
 			else {
-				pLast->pNext = i;
+				pLast->pNext = i; // Вызвано исключение: нарушение доступа для записи. this->pLast было nullptr.
 				pLast = i;
 			}
 			tmp = tmp->pNext;
@@ -80,11 +74,15 @@ public:
 		return *this;
 	}
 
-	bool operator==(const TList& list)
+	bool operator==(const TList& list) const
 	{
-		for (reset(); isEnd(); goNext()) {
-			if (pCurr->val != list.pCurr->val) {
-				return false;
+		if (len != list.len) return false;
+		else {
+			TNode<T>* i = pFirst, *j = list.pFirst;
+			while (i != pStop) {
+				if (i->val != j->val) return false;
+				i = i->pNext;
+				j = j->pNext;
 			}
 		}
 		return true;

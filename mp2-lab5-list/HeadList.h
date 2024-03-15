@@ -7,21 +7,25 @@ protected:
 	TNode<T>* pHead;
 public:
 	THeadList() {
-		TList();
+		TList::TList();
 		pHead = new TNode<T>;
 		pHead->pNext = pHead;
+	}
+	THeadList(const THeadList<T>& list) {
+		TList::TList(list);
+		pHead = list.pHead;
 	}
 	~THeadList() {
 		TList::clrList();
 		delete pHead;
 	}
-	void insFirst(T _val) override {
+	virtual void insFirst(T _val) override {
 		TList::insFirst(_val);
 		pHead->pNext = pFirst;
 	}
-	void delFirst(T _val) override {
-		TList::delFirst(_val);
-		if (empty()) pHead->pNext = pHead;
+	virtual void delFirst() override {
+		TList::delFirst();
+		if (TList::empty()) pHead->pNext = pHead;
 		else pHead->pNext = pFirst;
 	}
 };
