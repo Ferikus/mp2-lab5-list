@@ -20,7 +20,7 @@ public:
 	TList(const TList<T>& list)
 	{
 		TNode<T>* tmp = list.pFirst, * i;
-		pFirst = pLast = nullptr;
+		pFirst = pLast = pCurr = pPr = pStop = nullptr;
 		while (tmp != pStop) {
 			i = new TNode<T>;
 			i->val = tmp->val;
@@ -28,7 +28,7 @@ public:
 				pFirst = pLast = i;
 			}
 			else {
-				pLast->pNext = i; // Вызвано исключение: нарушение доступа для записи. this->pLast было nullptr.
+				pLast->pNext = i;
 				pLast = i;
 			}
 			tmp = tmp->pNext;
@@ -185,7 +185,7 @@ public:
 		}
 	}
 
-	virtual inline T getCurr() // получить доступ к текущему элементу списка
+	virtual inline T& getCurr() // получить доступ к текущему элементу списка
 	{
 		if (pos <= -1 || pos >= len) throw "Current index is out of list";
 		return pCurr->val;

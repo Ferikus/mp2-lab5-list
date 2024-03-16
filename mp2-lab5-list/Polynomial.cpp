@@ -1,7 +1,10 @@
 #include <iostream>
 #include "Polynomial.h"
 
-TMonom::TMonom() {}
+TMonom::TMonom() {
+	coeff = 0;
+	x = y = z = 0;
+}
 
 TMonom::TMonom(double _coeff, int _x, int _y, int _z) {
 	coeff = _coeff;
@@ -80,7 +83,7 @@ TPolynomial& TPolynomial::operator+(TPolynomial& p)
 	TMonom m, pm, rm;
 	reset();
 	p.reset();
-	while (1) {
+	while (1) { // перенести брейк в условие while
 		m = getCurr();
 		pm = p.getCurr();
 		if (!comparePowers(m, pm)) {
@@ -106,8 +109,30 @@ TPolynomial& TPolynomial::operator+(TPolynomial& p)
 	return *this;
 }
 
-TPolynomial& TPolynomial::operator*(double a) {}
+TPolynomial& TPolynomial::operator*(double a) {
+	for (reset(); isEnd(); goNext()) {
+		getCurr().coeff *= a;
+	}
+	return *this;
+}
 
-TPolynomial& TPolynomial::operator*(TMonom& m) {}
+TPolynomial& TPolynomial::operator*(TMonom& m) {
+	TMonom curr;
+	for (reset(); isEnd(); goNext()) {
+		curr = getCurr();
+		curr.coeff *= m.coeff;
+		curr.x *= m.x;
+		curr.y *= m.y;
+		curr.z *= m.z;
+	}
+	return *this;
+}
 
-std::ostream& operator<<(std::ostream& os, TPolynomial& p);
+std::ostream& operator<<(std::ostream& os, TPolynomial& p) {
+	TMonom curr;
+	for (p.reset(); p.isEnd(); p.goNext()) {
+		curr = p.getCurr();
+		os << curr.coeff << " * x^" << curr.x << " * y^" << curr.y << " * z^" << curr.z << " ";
+	}
+	return os;
+}
