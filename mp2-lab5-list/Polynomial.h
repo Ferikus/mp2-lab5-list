@@ -7,21 +7,26 @@ struct TMonom {
 
 	TMonom();
 	TMonom(double _coeff, int _x, int _y, int _z);
+	bool operator==(const TMonom& m) const;
+	bool operator!=(const TMonom& m) const;
 };
 
 class TPolynomial: public THeadList<TMonom> {
 public:
-	TPolynomial(int monoms[][4] = NULL, int km = 0); // monoms[0][4] коэффициенты и степени мономов
-	TPolynomial(TPolynomial& p);
+	TPolynomial(int monoms[][4] = NULL, int size = 0); // monoms[0][4] коэффициенты и кол-во мономов
+	TPolynomial(const TPolynomial& p);
 
-	bool comparePowers(TMonom m1, TMonom m2);
 	void addMonom(TMonom m); // добавить моном к полиному
 	//inline TMonom getMonom() { getCurr(); } // возвращает текущее значение монома
 
+	bool operator==(const TPolynomial& list) const;
+	bool operator!=(const TPolynomial& list) const;
+
 	TPolynomial& operator=(TPolynomial& p);
-	TPolynomial& operator+(TPolynomial& p);
 	TPolynomial& operator*(double a); // умножить полином на константу
 	TPolynomial& operator*(TMonom& m); // умножить полином на моном
+	TPolynomial& operator+(TPolynomial& p);
+	TPolynomial& operator-(TPolynomial& p);
 	
 	friend std::ostream& operator<<(std::ostream& os, TPolynomial& p);
 };

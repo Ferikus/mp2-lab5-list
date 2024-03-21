@@ -101,7 +101,7 @@ public:
 	}
 	virtual inline void goNext() // перейти к следующему элементу списка
 	{
-		if (pos <= -1 || pos >= len) throw "Current index is out of list";
+		if (pos <= -1 || pos > len) throw "Current index is out of list";
 		pPr = pCurr;
 		pCurr = pCurr->pNext;
 		pos++;
@@ -144,8 +144,9 @@ public:
 	}
 	virtual void insCurr(T _val) // вставить элемент списка перед текущим
 	{
-		if (empty()) throw "The list is empty: there is no current node";
-		else if (pCurr == pFirst) insFirst(_val);
+		//if (empty()) throw "The list is empty: there is no current node";
+		if (pCurr == pFirst) insFirst(_val);
+		else if (pCurr == pStop) insLast(_val);
 		else {
 			TNode<T>* tmp = new TNode<T>;
 			tmp->val = _val;
@@ -169,6 +170,7 @@ public:
 		if (pCurr == pStop) throw "The current position is our of the list";
 		if (pCurr == pFirst) {
 			delFirst();
+			reset();
 		}
 		else if (pCurr == pLast) {
 			TNode<T>* tmp = pCurr;

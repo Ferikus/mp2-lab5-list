@@ -2,6 +2,7 @@
 #include "../mp2-lab5-list/List.h"
 #include "../mp2-lab5-list/HeadList.h"
 #include "../mp2-lab5-list/Polynomial.h"
+#include "../mp2-lab5-list/Polynomial.cpp"
 
 /* -------------------------- ТЕСТЫ ДЛЯ TList -------------------------- */
 
@@ -221,40 +222,110 @@ TEST(HeadList, CAN_DELETE_CURRENT_NODE)
 
 TEST(Polynomial, CAN_CREATE_POLYNOMIAL)
 {
-	ADD_FAILURE();
+	int p1m[][4] = { {-2, 6, 4, 3}, { 1, 5, 4, 3 } };
+	int size1 = sizeof(p1m) / (4 * sizeof(int)); // 4 - количество элементов в массиве
+	EXPECT_NO_THROW(TPolynomial p(p1m, size1));
 }
 
 TEST(Polynomial, CAN_COPY_POLYNOMIAL)
 {
-	ADD_FAILURE();
+	int p1m[][4] = { {-2, 6, 4, 3}, { 1, 5, 4, 3 } };
+	int size1 = sizeof(p1m) / (4 * sizeof(int));
+	TPolynomial p1(p1m, size1);
+	TPolynomial p2(p1);
+	EXPECT_EQ(p1, p2);
 }
 
 TEST(Polynomial, CAN_CREATE_EQUAL_POLYNOMIAL)
 {
-	ADD_FAILURE();
+	int p1m[][4] = { {-2, 6, 4, 3}, { 1, 5, 4, 3 } };
+	int size1 = sizeof(p1m) / (4 * sizeof(int));
+	TPolynomial p1(p1m, size1);
+	TPolynomial p2 = p1;
+	EXPECT_EQ(p1, p2);
 }
 
 TEST(Polynomial, CAN_COMPARE_POWERS)
 {
-	ADD_FAILURE();
+	TMonom m1 = {0, 3, 2, 2}, m2 = {0, 3, 2, 1}, m3 = {0, 3, 2, 0};
+	EXPECT_TRUE(comparePowers(m1, m2)); // m2 >= m1 ? yes
+	EXPECT_FALSE(comparePowers(m3, m1)); // m3 >= m1 ? no
 }
 
 TEST(Polynomial, CAN_ADD_MONOM)
 {
-	ADD_FAILURE();
+	//вставка в конец
+	int p1m[][4] = { {-2, 6, 4, 3}, {1, 5, 4, 3} };
+	int size1 = sizeof(p1m) / (4 * sizeof(int));
+	TPolynomial p1(p1m, size1);
+	TMonom m = { 1, 4, 2, 1 };
+	EXPECT_NO_THROW(p1.addMonom(m));
+	int p2m[][4] = { {-2, 6, 4, 3}, {1, 5, 4, 3}, {1, 4, 2, 1} };
+	int size2 = sizeof(p2m) / (4 * sizeof(int));
+	TPolynomial p2(p2m, size2);
+	EXPECT_EQ(p1, p2);
+
+	//вставка в середину
+	int p3m[][4] = { {-2, 5, 5, 5}, {1, 5, 3, 9} };
+	int size3 = sizeof(p3m) / (4 * sizeof(int));
+	TPolynomial p3(p3m, size3);
+	TMonom n = { 1, 5, 4, 7 };
+	EXPECT_NO_THROW(p3.addMonom(n));
+	int p4m[][4] = { {-2, 5, 3, 3}, {1, 5, 4, 7}, {1, 5, 5, 5} };
+	int size4 = sizeof(p4m) / (4 * sizeof(int));
+	TPolynomial p4(p4m, size4);
+	EXPECT_EQ(p3, p4);
+
+	//мономы с одинаковыми степенями
+	int p5m[][4] = { {-2, 6, 4, 3}, {1, 5, 4, 3} };
+	int size5 = sizeof(p5m) / (4 * sizeof(int));
+	TPolynomial p5(p5m, size5);
+	TMonom q = { 2, 6, 4, 3 };
+	EXPECT_NO_THROW(p5.addMonom(q));
+	int p6m[][4] = { {1, 5, 4, 3} };
+	int size6 = sizeof(p6m) / (4 * sizeof(int));
+	TPolynomial p6(p6m, size6);
+	EXPECT_EQ(p5, p6);
 }
 
 TEST(Polynomial, CAN_ADD_POLYNOMIAL)
 {
-	ADD_FAILURE();
+	int p1m[][4] = { {-2, 6, 4, 3}, {1, 5, 4, 3} };
+	int size1 = sizeof(p1m) / (4 * sizeof(int));
+	TPolynomial p1(p1m, size1);
+	int p2m[][4] = { {2, 6, 4, 3}, {1, 5, 5, 7}, {2, 5, 4, 3} };
+	int size2 = sizeof(p2m) / (4 * sizeof(int));
+	TPolynomial p2(p2m, size2);
+	TPolynomial p3;
+	p3 = p1 + p2;
+	int p4m[][4] = { {1, 5, 5, 7}, {3, 5, 4, 3} };
+	int size4 = sizeof(p4m) / (4 * sizeof(int));
+	TPolynomial p4(p4m, size4);
+	EXPECT_EQ(p3, p4);
 }
 
 TEST(Polynomial, CAN_MULTIPLY_BY_CONST)
 {
-	ADD_FAILURE();
+	int p1m[][4] = { {-2, 6, 4, 3}, { 1, 5, 4, 3 } };
+	int size1 = sizeof(p1m) / (4 * sizeof(int));
+	TPolynomial p1(p1m, size1);
+	double a = 5;
+	p1 = p1 * a;
+	int p2m[][4] = { {-2 * a, 6, 4, 3}, { 1 * a, 5, 4, 3 } };
+	int size2 = sizeof(p2m) / (4 * sizeof(int));
+	TPolynomial p2(p2m, size2);
+	EXPECT_EQ(p1, p2);
 }
 
 TEST(Polynomial, CAN_MULTIPLY_BY_MONOM)
 {
-	ADD_FAILURE();
+	int p1m[][4] = { {-2, 6, 4, 3}, { 1, 5, 4, 3 } };
+	int size1 = sizeof(p1m) / (4 * sizeof(int));
+	TPolynomial p1(p1m, size1);
+	TMonom m = { 2, 1, 1, 1 };
+	p1 = p1 * m;
+	int p2m[][4] = { {-4, 7, 5, 4}, { 2, 6, 5, 4 } };
+	int size2 = sizeof(p2m) / (4 * sizeof(int));
+	TPolynomial p2(p2m, size2);
+	EXPECT_EQ(p1, p2);
 }
