@@ -162,18 +162,18 @@ TPolynomial& TPolynomial::operator+(TPolynomial& p)
 	return *this;
 }
 
-TPolynomial& TPolynomial::operator-(TPolynomial& p)
-{
-	*(this) = *(this) + p * (-1);
-	return *this;
-}
+//TPolynomial& TPolynomial::operator-(TPolynomial& p)
+//{
+//	*(this) = *(this) + p * (-1);
+//	return *this;
+//}
 
-std::ostream& operator<<(std::ostream& os, TPolynomial& p)
-{
-	TMonom curr;
-	for (p.reset(); p.isEnd(); p.goNext()) {
-		curr = p.getCurr();
-		os << curr.coeff << " * x^" << curr.x << " * y^" << curr.y << " * z^" << curr.z << " ";
-	}
-	return os;
-}
+//std::ostream& operator<<(std::ostream& os, TPolynomial& p)
+//{
+//	TMonom curr;
+//	for (p.reset(); p.isEnd(); p.goNext()) {
+//		curr = p.getCurr();
+//		os << curr.coeff << " * x^" << curr.x << " * y^" << curr.y << " * z^" << curr.z << " ";
+//	}
+//	return os;
+//}
