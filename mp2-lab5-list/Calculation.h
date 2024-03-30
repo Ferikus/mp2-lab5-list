@@ -133,55 +133,60 @@ public:
 	{
 		TPolynomial p;
 		TMonom m;
+		int i = 0;
+		char sign;
+		int coeff, pow;
+
+		// вспомогательные переменные
+		size_t pos;
 		bool px, py, pz;
+		
 		C.clear();  D.clear();
 		std::string str = infix;
-		for (int i = 0; i < str.size(); i++) {
-			px, py, pz = false;
-			if ((str[i] == '+') || (str[i] == '-')) {
+		while (i < str.size()) {
+			// обрабатывать по моному за проход
+			if (str[i] == '+' || str[i] == '-') {
 				C.push(str[i]);
+				i++;
 			}
 			if ((str[i] >= '0') && (str[i] <= '9')) { // коэффициент
-				C.push(str[i]);
+				sign = C.pop();
+
+				coeff = std::stoi(&str[i], &pos);
+				i = i + pos;
+
+				if (sign == '+') m.coeff = coeff;
+				else if (sign == '-') m.coeff = -coeff;
 			}
-			if (str[i] == '(') {
-				if (px == false) { // если число стоит до скобок, то...
-					int coeff = C.pop(); // установили коэффициент монома
-					char sign = C.pop();
-					if (sign == '-') m.setCoeff(-coeff);
-					else m.setCoeff(coeff);
+			px = py = pz = false;
+			while (str[i] != '+' && str[i] != '-' && (i < str.size())) {
+				if (str[i] == '(') { // степень
+					C.push(str[i]);
+					i++;
+
+					pow = std::stoi(&str[i], &pos);
+					i = i + pos;
+
+					if (px == false) {
+						m.x = pow;
+						px = true;
+					}
+					else if (py == false) {
+						m.y = pow;
+						py = true;
+					}
+					else if (pz == false) {
+						m.z = pow;
+						pz = true;
+					}
 				}
-				C.push(str[i]); // положили ( в стек
-				i++;
-				size_t pos;
-				double x;
-				x = std::stod(&str[i], &pos);
-				D.push(x);
-				i = i + pos - 1;
-				// обрабатываем степень
-				int power = C.pop();
-				if (px == false) {
-					m.setX(power);
-					px = true;
-				}
-				else if (py == false) {
-					m.setY(power);
-					py = true;
-				}
-				else if (pz == false) {
-					m.setZ(power);
-					pz = true;
+				if (str[i] == ')') {
+					C.pop();
+					i++;
 				}
 			}
-			if (str[i] == ')') {
-			}
+			p.addMonom(m);
 		}
-
-		int i = 0;
-		while (i < str.size()) {
-
-		}
-
 		return p;
 	}
 };

@@ -3,7 +3,7 @@
 #include "../../mp2-lab5-list/Polynomial.h";
 #include "../../mp2-lab5-list/Calculation.h";
 
-using namespace std;
+//using namespace std;
 
 namespace Forma1 {
 
@@ -20,7 +20,7 @@ namespace Forma1 {
 	public ref class MyForm : public System::Windows::Forms::Form
 	{
 		Graphics^ gr;
-		vector<TPolynomial>* v;
+		std::vector<TPolynomial>* v;
 		int Counter;
 		// ќбъ€вить массивы label Numeration Operation?
 
@@ -42,6 +42,9 @@ namespace Forma1 {
 
 			gr = CreateGraphics();
 			Counter = 0;
+
+			v = new std::vector<TPolynomial>;
+
 		}
 
 	protected:
@@ -182,7 +185,7 @@ namespace Forma1 {
 		TCalc tmp(ptext); // вспомогательный объект
 		TPolynomial p = tmp.toPolynomial(); // переформатировали в полином
 		ptext = p.outputPolynomial(); // ptext обновлЄн
-		//v.push_back(p);
+		(*v).push_back(p);
 	}
 	private: System::Void button_add(System::Object^ sender, System::EventArgs^ e) {
 
@@ -206,7 +209,7 @@ namespace Forma1 {
 
 			//вывод полинома
 			System::Windows::Forms::Label^ labelOutput = gcnew System::Windows::Forms::Label();
-			string ptext;
+			std::string ptext;
 			MarshalString(textBoxPolynomial->Text, ptext);
 			ProcessPolynomial(ptext);
 			labelOutput->Text = gcnew System::String(ptext.c_str());

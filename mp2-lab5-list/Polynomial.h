@@ -69,6 +69,10 @@ public:
 
 	void addMonom(TMonom m) // добавить моном к полиному
 	{
+		if (empty()) {
+			insFirst(m);
+			return;
+		}
 		reset();
 		TMonom i = getCurr();
 		while (!(isEnd()) && !comparePowers(m, i)) goNext(); // пока m < i - двигаем
