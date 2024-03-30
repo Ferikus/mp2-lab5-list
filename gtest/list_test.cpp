@@ -329,3 +329,13 @@ TEST(Polynomial, CAN_MULTIPLY_BY_MONOM)
 	TPolynomial p2(p2m, size2);
 	EXPECT_EQ(p1, p2);
 }
+
+TEST(Polynomial, OUTPUTS_POLYNOMIAL_CORRECTLY)
+{
+	int p1m[][4] = { {-2, 6, 4, 3}, { 1, 5, 4, 3 } };
+	int size1 = sizeof(p1m) / (4 * sizeof(int));
+	TPolynomial p1(p1m, size1);
+	std::string s1 = "- 2*x^(6)*y^(4)*z^(3) + 1*x^(5)*y^(4)*z^(3)";
+	std::string s2 = p1.outputPolynomial();
+	EXPECT_EQ(s1, s2);
+}

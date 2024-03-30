@@ -22,6 +22,7 @@ namespace Forma1 {
 		Graphics^ gr;
 		vector<TPolynomial>* v;
 		int Counter;
+		// ќбъ€вить массивы label Numeration Operation?
 
 	private: System::Windows::Forms::Label^ labelPolynomial;
 	private: System::Windows::Forms::Label^ labelOperation;
@@ -41,11 +42,6 @@ namespace Forma1 {
 
 			gr = CreateGraphics();
 			Counter = 0;
-			/*rnd1 = gcnew Random();
-			BlackPen = gcnew Pen(Color::Black);
-			BlackPen->Width = 10.0F;
-			WhitePen = gcnew Pen(SystemColors::Control);
-			WhitePen->Width = 10.0F;*/
 		}
 
 	protected:
@@ -171,16 +167,22 @@ namespace Forma1 {
 	}
 	private: System::Void comboBox1_SelectedIndexChanged(System::Object^ sender, System::EventArgs^ e) {
 	}
-	private: void MarshalString(String^ s, std::string& os) {
+	private: void MarshalString(String^ s, std::string& os) { // String^ -> string
 		using namespace Runtime::InteropServices;
 		const char* chars = (const char*)(Marshal::StringToHGlobalAnsi(s)).ToPointer();
 		os = chars;
 		Marshal::FreeHGlobal(IntPtr((void*)chars));
 	}
-	private: void ToPolynomial(std::string& ptext) {
-		// функци€ преобразовани€ выражений вида в TPolynomial и ptext: 2(123) 4(143) в 2*x^1*y^2*z^3 + ...
-		// и их сортировки от большей степени к меньшей в многочлен
-		// + засунуть в вектор полиномов
+	private: void ProcessPolynomial(std::string& ptext) {
+		// пока без сортировки
+		// через стек сделать ptext -> TPolynomial
+		// TPolynomial записать в string в корректном виде
+		// TPolynomial положить в vector<...> v
+
+		TCalc tmp(ptext); // вспомогательный объект
+		TPolynomial p = tmp.toPolynomial(); // переформатировали в полином
+		ptext = p.outputPolynomial(); // ptext обновлЄн
+		//v.push_back(p);
 	}
 	private: System::Void button_add(System::Object^ sender, System::EventArgs^ e) {
 
@@ -206,7 +208,7 @@ namespace Forma1 {
 			System::Windows::Forms::Label^ labelOutput = gcnew System::Windows::Forms::Label();
 			string ptext;
 			MarshalString(textBoxPolynomial->Text, ptext);
-			ToPolynomial(ptext);
+			ProcessPolynomial(ptext);
 			labelOutput->Text = gcnew System::String(ptext.c_str());
 			labelOutput->TextAlign = ContentAlignment::MiddleCenter;
 			labelOutput->BackColor = System::Drawing::Color::Lavender; // ÷вет фона
@@ -227,3 +229,4 @@ namespace Forma1 {
 	}
 	};
 }
+
