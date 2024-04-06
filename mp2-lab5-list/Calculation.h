@@ -74,64 +74,6 @@ public:
 		if (!C.empty()) res = false;
 		return res;
 	}
-
-	//double calc() {
-	//	C.clear();  D.clear();
-	//	std::string str = '(' + infix + ')';
-	//	for (int i = 0; i < str.size(); i++) {
-	//		if (str[i] == '(') C.push(str[i]);
-	//		if (str[i] == ')') {
-	//			char el = C.pop();
-	//			while (el != '(') {
-	//				double x2 = D.pop(),
-	//					x1 = D.pop(),
-	//					y;
-	//				switch (el) {
-	//				case '+': y = x1 + x2; break;
-	//				case '-': y = x1 - x2; break;
-	//				case '*': y = x1 * x2; break;
-	//				case '/': {
-	//					if (x2 == 0) throw "Division by 0";
-	//					y = x1 / x2;
-	//				} break;
-	//				case '^': y = pow(x1, x2); break;
-	//				}
-	//				D.push(y);
-	//				el = C.pop();
-	//			}
-	//		}
-	//		if ((str[i] >= '0') && (str[i] <= '9')) {
-	//			size_t pos;
-	//			double x;
-	//			x = std::stod(&str[i], &pos);
-	//			D.push(x);
-	//			i = i + pos - 1;
-	//		}
-	//		if ((str[i] == '+') || (str[i] == '-') || (str[i] == '*') || (str[i] == '/') || (str[i] == '^')) {
-	//			char el = C.pop();
-	//			while (prior(el) >= prior(str[i])) {
-	//				double x2 = D.pop(),
-	//					x1 = D.pop(),
-	//					y;
-	//				switch (el) {
-	//				case '+': y = x1 + x2; break;
-	//				case '-': y = x1 - x2; break;
-	//				case '*': y = x1 * x2; break;
-	//				case '/': {
-	//					if (x2 == 0) throw "Division by 0";
-	//					y = x1 / x2;
-	//				} break;
-	//				case '^': y = pow(x1, x2); break;
-	//				}
-	//				D.push(y);
-	//				el = C.pop();
-	//			}
-	//			C.push(el);
-	//			C.push(str[i]);
-	//		}
-	//	}
-	//	return D.pop();
-	//}
 	
 	TPolynomial toPolynomial()
 	{
@@ -195,7 +137,7 @@ public:
 	}
 
 
-	TPolynomial& calcPolynomial(std::vector<TPolynomial> v) {
+	TPolynomial calcPolynomial(std::vector<TPolynomial>& v) {
 		C.clear(); D.clear();
 		std::string str = '(' + infix + ')';
 		for (int i = 0; i < str.size(); i++) {
@@ -235,11 +177,11 @@ public:
 				i = i + pos;
 			}
 			if ((str[i] >= '0') && (str[i] <= '9')) {
-				char el = C.pop();
+				//char el = C.pop();
 				size_t pos;
 				int coeff;
 				coeff = std::stoi(&str[i], &pos);
-				E.push(v[coeff]);
+				D.push(coeff);
 				i = i + pos - 1;
 			}
 			if ((str[i] == '+') || (str[i] == '-') || (str[i] == '*')) {

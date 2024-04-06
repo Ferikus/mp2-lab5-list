@@ -48,6 +48,11 @@ public:
 		CurrInd++;
 		pMem[CurrInd] = el;
 	}
+	void push(TPolynomial& el) {
+		if (CurrInd + 1 >= MaxSize) throw "Stack overflow";
+		CurrInd++;
+		pMem[CurrInd] = el;
+	}
 	T pop() {
 		if (empty()) throw "Stack is empty";
 		CurrInd--;

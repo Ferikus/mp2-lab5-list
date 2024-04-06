@@ -203,7 +203,6 @@ namespace Forma1 {
 
 		//вывод полинома
 		System::Windows::Forms::Label^ labelOutput = gcnew System::Windows::Forms::Label();
-		ProcessPolynomial(ptext);
 		labelOutput->Text = gcnew System::String(ptext.c_str());
 		labelOutput->TextAlign = ContentAlignment::MiddleCenter;
 		labelOutput->BackColor = System::Drawing::Color::Lavender; // ÷вет фона
@@ -225,6 +224,7 @@ namespace Forma1 {
 			// перевод полинома из String^ в string
 			std::string ptext;
 			MarshalString(textBoxPolynomial->Text, ptext);
+			ProcessPolynomial(ptext);
 			addRecord(ptext);
 		}
 	}
@@ -238,8 +238,8 @@ namespace Forma1 {
 
 		ptext = (*v).back().outputPolynomial();
 		addRecord(ptext);
-		// доработать калькул€тор
-		// как-то совместить с работой кнопки Add
+		// +5(8)(3)(4)+2(8)(1)(6)+6(3)(6)(1)
+		// +5(8)(3)(4)-2(8)(1)(6)+8(1)(4)(2)
 	}
 	};
 }
