@@ -2,7 +2,6 @@
 #include "../mp2-lab5-list/List.h"
 #include "../mp2-lab5-list/HeadList.h"
 #include "../mp2-lab5-list/Polynomial.h"
-#include "../mp2-lab5-list/Polynomial.cpp"
 
 /* -------------------------- реярш дкъ TList -------------------------- */
 

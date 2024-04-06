@@ -173,11 +173,11 @@ public:
 		}
 		return *this;
 	}
-	//TPolynomial& operator-(TPolynomial& p)
-	//{
-	//	*(this) = *(this) + p * (-1);
-	//	return *this;
-	//}
+	TPolynomial& operator-(TPolynomial& p)
+	{
+		*(this) = *(this) + p * (-1);
+		return *this;
+	}
 	
 	std::string outputPolynomial()
 	{

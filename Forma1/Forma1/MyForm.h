@@ -95,10 +95,12 @@ namespace Forma1 {
 			// 
 			this->labelOperation->AutoSize = true;
 			this->labelOperation->Location = System::Drawing::Point(30, 65);
+			this->labelOperation->Margin = System::Windows::Forms::Padding(0);
 			this->labelOperation->Name = L"labelOperation";
 			this->labelOperation->Size = System::Drawing::Size(61, 15);
 			this->labelOperation->TabIndex = 1;
 			this->labelOperation->Text = L"Operation";
+			this->labelOperation->UseWaitCursor = true;
 			// 
 			// textBoxPolynomial
 			// 
@@ -140,14 +142,14 @@ namespace Forma1 {
 			this->panel1->BorderStyle = System::Windows::Forms::BorderStyle::FixedSingle;
 			this->panel1->Location = System::Drawing::Point(33, 102);
 			this->panel1->Name = L"panel1";
-			this->panel1->Size = System::Drawing::Size(781, 427);
+			this->panel1->Size = System::Drawing::Size(781, 419);
 			this->panel1->TabIndex = 7;
 			// 
 			// MyForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(7, 15);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(848, 557);
+			this->ClientSize = System::Drawing::Size(848, 550);
 			this->Controls->Add(this->panel1);
 			this->Controls->Add(this->buttonExecute);
 			this->Controls->Add(this->buttonAdd);
@@ -176,59 +178,68 @@ namespace Forma1 {
 		os = chars;
 		Marshal::FreeHGlobal(IntPtr((void*)chars));
 	}
-	private: void ProcessPolynomial(std::string& ptext) {
-		// пока без сортировки
-		// через стек сделать ptext -> TPolynomial
-		// TPolynomial записать в string в корректном виде
-		// TPolynomial положить в vector<...> v
-
+	private: void ProcessPolynomial(std::string& ptext) { // конвертаци€ полинома из string в TPolynomial + сохранение в вектор v
 		TCalc tmp(ptext); // вспомогательный объект
 		TPolynomial p = tmp.toPolynomial(); // переформатировали в полином
 		ptext = p.outputPolynomial(); // ptext обновлЄн
 		(*v).push_back(p);
 	}
+	private: System::Void addRecord(std::string& ptext) { // добавить запись в таблицу 
+		//нумераци€
+		System::Windows::Forms::Label^ labelNumeration = gcnew System::Windows::Forms::Label();
+		System::String^ number = Counter.ToString();
+		labelNumeration->Text = number;
+		labelNumeration->TextAlign = ContentAlignment::MiddleCenter;
+		labelNumeration->BackColor = System::Drawing::Color::LightSteelBlue; // ÷вет фона
+		labelNumeration->BorderStyle = System::Windows::Forms::BorderStyle::FixedSingle; // √раница
+		labelNumeration->Padding = System::Windows::Forms::Padding(0, 2, 0, 2);
+		labelNumeration->Margin = System::Windows::Forms::Padding(0);
+		labelNumeration->Location = System::Drawing::Point(this->panel1->Location.X, this->panel1->Location.Y + Counter * (labelNumeration->Height - 1));
+		labelNumeration->MinimumSize = System::Drawing::Size(36, labelNumeration->Height);
+		labelNumeration->MaximumSize = System::Drawing::Size(36, labelNumeration->Height);
+		labelNumeration->AutoSize = true;
+		this->Controls->Add(labelNumeration);
+		labelNumeration->BringToFront();
+
+		//вывод полинома
+		System::Windows::Forms::Label^ labelOutput = gcnew System::Windows::Forms::Label();
+		ProcessPolynomial(ptext);
+		labelOutput->Text = gcnew System::String(ptext.c_str());
+		labelOutput->TextAlign = ContentAlignment::MiddleCenter;
+		labelOutput->BackColor = System::Drawing::Color::Lavender; // ÷вет фона
+		labelOutput->BorderStyle = System::Windows::Forms::BorderStyle::FixedSingle; // √раница
+		labelOutput->Padding = System::Windows::Forms::Padding(0, 2, 0, 2);
+		labelOutput->Location = System::Drawing::Point(this->panel1->Location.X + 35, this->panel1->Location.Y + Counter * (labelOutput->Height - 1));
+		labelOutput->MinimumSize = System::Drawing::Size(746, labelOutput->Height);
+		labelOutput->MaximumSize = System::Drawing::Size(746, labelOutput->Height);
+		labelOutput->AutoSize = true;
+		this->Controls->Add(labelOutput);
+		labelOutput->BringToFront();
+
+		Counter++;
+	}
 	private: System::Void button_add(System::Object^ sender, System::EventArgs^ e) {
 
-		if (textBoxPolynomial->Text == "" || Counter > 17) {}
+		if (textBoxPolynomial->Text == "" || Counter > 18) {}
 		else {
-
-			//нумераци€
-			System::Windows::Forms::Label^ labelNumeration = gcnew System::Windows::Forms::Label();
-			System::String^ number = Counter.ToString();
-			labelNumeration->Text = number;
-			labelNumeration->TextAlign = ContentAlignment::MiddleCenter;
-			labelNumeration->BackColor = System::Drawing::Color::LightSteelBlue; // ÷вет фона
-			labelNumeration->BorderStyle = System::Windows::Forms::BorderStyle::FixedSingle; // √раница
-			labelNumeration->Padding = System::Windows::Forms::Padding(0, 2, 0, 2);
-			labelNumeration->Location = System::Drawing::Point(this->panel1->Location.X, this->panel1->Location.Y + Counter * labelNumeration->Height);
-			labelNumeration->MinimumSize = System::Drawing::Size(36, 21);
-			labelNumeration->MaximumSize = System::Drawing::Size(36, 21);
-			labelNumeration->AutoSize = true;
-			this->Controls->Add(labelNumeration);
-			labelNumeration->BringToFront();
-
-			//вывод полинома
-			System::Windows::Forms::Label^ labelOutput = gcnew System::Windows::Forms::Label();
+			// перевод полинома из String^ в string
 			std::string ptext;
 			MarshalString(textBoxPolynomial->Text, ptext);
-			ProcessPolynomial(ptext);
-			labelOutput->Text = gcnew System::String(ptext.c_str());
-			labelOutput->TextAlign = ContentAlignment::MiddleCenter;
-			labelOutput->BackColor = System::Drawing::Color::Lavender; // ÷вет фона
-			labelOutput->BorderStyle = System::Windows::Forms::BorderStyle::FixedSingle; // √раница
-			labelOutput->Padding = System::Windows::Forms::Padding(0, 2, 0, 2);
-			labelOutput->Location = System::Drawing::Point(this->panel1->Location.X + 35, this->panel1->Location.Y + Counter * labelOutput->Height);
-			labelOutput->MinimumSize = System::Drawing::Size(746, 21);
-			labelOutput->MaximumSize = System::Drawing::Size(746, 21);
-			labelOutput->AutoSize = true;
-			this->Controls->Add(labelOutput);
-			labelOutput->BringToFront();
-
-			Counter++;
-
+			addRecord(ptext);
 		}
 	}
 	private: System::Void button_execute(System::Object^ sender, System::EventArgs^ e) {
+		std::string ptext;
+		MarshalString(textBoxOperation->Text, ptext);
+		TCalc tmp(ptext); // вспомогательный объект
+		TPolynomial res;
+		res = tmp.calcPolynomial(*v);
+		(*v).push_back(res);
+
+		ptext = (*v).back().outputPolynomial();
+		addRecord(ptext);
+		// доработать калькул€тор
+		// как-то совместить с работой кнопки Add
 	}
 	};
 }
