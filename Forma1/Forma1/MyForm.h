@@ -229,17 +229,22 @@ namespace Forma1 {
 		}
 	}
 	private: System::Void button_execute(System::Object^ sender, System::EventArgs^ e) {
-		std::string ptext;
-		MarshalString(textBoxOperation->Text, ptext);
-		TCalc tmp(ptext); // вспомогательный объект
-		TPolynomial res;
-		res = tmp.calcPolynomial(*v);
-		(*v).push_back(res);
+		if (textBoxOperation->Text == "" || Counter > 18) {}
+		else {
+			std::string ptext;
+			MarshalString(textBoxOperation->Text, ptext);
+			TCalc tmp(ptext); // вспомогательный объект
+			TPolynomial res;
+			res = tmp.calcPolynomial(*v);
+			(*v).push_back(res);
 
-		ptext = (*v).back().outputPolynomial();
-		addRecord(ptext);
+			ptext = (*v).back().outputPolynomial();
+			addRecord(ptext);
+		}
 		// +5(8)(3)(4)+2(8)(1)(6)+6(3)(6)(1)
 		// +5(8)(3)(4)-2(8)(1)(6)+8(1)(4)(2)
+
+		//проверить что стек работает при *(-1)
 	}
 	};
 }

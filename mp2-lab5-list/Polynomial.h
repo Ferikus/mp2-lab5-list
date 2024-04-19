@@ -35,14 +35,14 @@ struct TMonom {
 };
 
 bool comparePowers(TMonom m1, TMonom m2) { // сравнить m1 >= m2
-	if (m1.x < m2.x) return false;
-	else {
-		if (m1.y < m2.y) return false;
-		else {
-			if (m1.z < m2.z) return false;
+	if (m1.x > m2.x) return true;
+	else if (m1.x == m2.x) {
+		if (m1.y > m2.y) return true;
+		else if (m1.y == m2.y) {
+			if (m1.z >= m2.z) return true;
 		}
 	}
-	return true;
+	return false;
 }
 
 class TPolynomial: public THeadList<TMonom> {
@@ -154,6 +154,7 @@ public:
 				// моном m < pm =>  добавляем моном pm в полином p
 				insCurr(pm);
 				p.goNext();
+				goNext();
 			}
 			else if (m.x == pm.x && m.y == pm.y && m.z == pm.z) {
 				// индексы мономов равны (это могут быть головы)
@@ -170,6 +171,14 @@ public:
 					p.goNext();
 				}
 			}
+			else {
+				goNext();
+				insCurr(pm);
+			}
+			//else {
+			//	// моном m > pm
+
+			//}
 		}
 		return *this;
 	}

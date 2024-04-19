@@ -289,15 +289,18 @@ TEST(Polynomial, CAN_ADD_MONOM)
 
 TEST(Polynomial, CAN_ADD_POLYNOMIAL)
 {
-	int p1m[][4] = { {-2, 6, 4, 3}, {1, 5, 4, 3} };
+	//int p1m[][4] = { {-2, 6, 4, 3}, {1, 5, 4, 3} };
+	int p1m[][4] = { {5, 8, 3, 4}, { 2, 8, 1, 6 }, { 6, 3, 6, 1 } };
 	int size1 = sizeof(p1m) / (4 * sizeof(int));
 	TPolynomial p1(p1m, size1);
-	int p2m[][4] = { {2, 6, 4, 3}, {1, 5, 5, 7}, {2, 5, 4, 3} };
+	//int p2m[][4] = { {2, 6, 4, 3}, {1, 5, 5, 7}, {2, 5, 4, 3} };
+	int p2m[][4] = { {5, 8, 3, 4}, { -2, 8, 1, 6 }, { 8, 1, 4, 2 } };
 	int size2 = sizeof(p2m) / (4 * sizeof(int));
 	TPolynomial p2(p2m, size2);
 	TPolynomial p3;
 	p3 = p1 + p2;
-	int p4m[][4] = { {1, 5, 5, 7}, {3, 5, 4, 3} };
+	//int p4m[][4] = { {1, 5, 5, 7}, {3, 5, 4, 3} };
+	int p4m[][4] = { {10, 8, 3, 4}, {6, 3, 6, 1}, {8, 1, 4, 2} };
 	int size4 = sizeof(p4m) / (4 * sizeof(int));
 	TPolynomial p4(p4m, size4);
 	EXPECT_EQ(p3, p4);
