@@ -154,7 +154,7 @@ public:
 				// моном m < pm =>  добавляем моном pm в полином p
 				insCurr(pm);
 				p.goNext();
-				goNext();
+				//goNext();
 			}
 			else if (m.x == pm.x && m.y == pm.y && m.z == pm.z) {
 				// индексы мономов равны (это могут быть головы)
